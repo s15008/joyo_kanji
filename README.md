@@ -4,6 +4,4 @@
 usage: joyo_kanji [-h] [-g] [-a] [-t]
 
 ## js
-list = []
-Array.prototype.forEach.call(document.getElementsByTagName('table')[1].getElementsByClassName('extiw'), function(node) { list.push(node.textContent);});
-console.log(list.join(','))
+list = []; Array.prototype.forEach.call(document.getElementsByTagName('table')[1].getElementsByClassName('extiw'), function(node) { list.push(node.textContent);}); console.log(list.join(','));
