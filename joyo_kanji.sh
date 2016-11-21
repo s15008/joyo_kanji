@@ -11,7 +11,7 @@ function usage {
     echo "-h    This!!!"
     echo "-g    Print out JOYO KANJI list and a gorilla simply"
     echo "-a    Print out JOYO KANJI list and an alpaca simply"
-    exit 1
+    echo "-t    Print out JOYO KANJI list as plain html so simply"
 }
 
 # output Joyo Kanji as CSV
@@ -22,6 +22,33 @@ function get_joyo_kanji_as_csv {
         | sed -E 's/.*<a.*>(.)<\/a>.*/\1/'\
         | tr '\n' ','\
         | sed 's/,$//'
+}
+
+#output Joyo Kanji as plain html
+function get_joyo_kanji_as_plain_html {
+    cat << EOS
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${cmdname}</title>
+</head>
+<body>
+    `get_joyo_kanji_as_table_elements`
+</body>
+</html>
+EOS
+}
+
+#output Joyo Kanji as table elements for html
+function get_joyo_kanji_as_table_elements {
+    echo "<table>" 
+
+    for data in `get_joyo_kanji_as_csv | tr ',' ' '` ; do 
+        echo "<tr><td>${data}</td></tr>"
+    done
+
+    echo "</table>" 
 }
 
 # add gorilla to CSV header
@@ -71,7 +98,7 @@ EOS
 
 # main
 ## option
-while getopts agh OPT
+while getopts aght OPT
 do
     case $OPT in
         a)
@@ -82,9 +109,15 @@ do
             ;;
         h)
             usage
+            exit 0
+            ;;
+        t)
+            get_joyo_kanji_as_plain_html
+            exit 0
             ;;
         \?)
             usage
+            exit 1
             ;;
     esac
 done
